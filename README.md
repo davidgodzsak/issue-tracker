@@ -122,15 +122,24 @@ Az @Enumerated annotációval jelezzük, hogy az ENUM típúsú mezőket milyen 
 Ha most elindítjuk az alkalmazást `mvn spring-boot:run` és megnyitjuk a `localhost:8080/h2` -t akkor látjuk a H2 conosle ban, hogy sikeresen létrehozta az entitás leírása alapján a Spring Boot a JPA segítségével a táblánkat.
 
 Mivel a H2 adatbázis a memóriába ment, ezért minden alkalommal, mikor leállítjuk törlődnek az adataink. Ahhoz hogy legyenek adataink az induláskor az adatbázisban a Spring Boot segítségét vesszük.
-a src/main/resources mappában elkészítjük a schema.sql-t (táblák létrehozása) és a data.sql-t(adatok insertálása). Ezeket ebben a sorrendben futtatja majd a Spring Boot, amikor az alakalmazásunkat indítjuk. Bár a Spring megcsinálja a tábáinkat automatikusan, mint ahogy az előbb azt látjuk, de ez sajnos később történik, mint a data.sql futtatása, így ilyenkor még nincs táblánk, így a tábladefiníciókat is meg kell írnunk.
+a src/main/resources mappában elkészítjük a data.sql-t(adatok insertálása).Ezt futtatja majd a Spring Boot, amikor az alakalmazásunkat indítjuk.
 
-Először futtasssuk az alkalmazást és nyissuk meg a H2 konzolt az imént leírt módon. Ezután futtassuk a konzolban a következő parancsot: 
-`select SQL from information_schema.tables where table_name = 'USERS';`
-
-Az eredmány az az sql parancs, amit a JPA kiadott a tábla létrehozásához.Másoljuk ezt a /src/main/schema.sql fájlba.
-Most készítsünk egy új felhasználót a /src/main/schema.sql fájlban: `INSERT INTO USERS VALUES (0, 0, 'admin', 'admin@gmail.com', 'admin', 'ADMIN')`. Ez létrehoz egy felhasználót ID:0, Version: 0, username:'admin', email:'admin@gmail.com' password: 'admin', role: 'ADMIN'.
+Készítsünk egy új felhasználót a /src/main/schema.sql fájlban: `INSERT INTO USERS VALUES (0, 0, 'admin', 'admin@gmail.com', 'admin', 'ADMIN')`. Ez létrehoz egy felhasználót ID:0, Version: 0, username:'admin', email:'admin@gmail.com' password: 'admin', role: 'ADMIN'.
 Később titkosítjuk majd a jelszót.
+
+A `select SQL from information_schema.tables where table_name = 'USERS';` parancs kiadásával a H2 konzolban az eredmány az az sql parancs, amit a JPA kiadott a tábla létrehozásához.
 
 Még visszatérünk majd a modelre és kiegészítjük a többi osztállyal.
 
 ### Controller
+
+A Controller feladata a beérkező HTTP kéréseket feldolgozni, és ezekre válaszolni. Végpontokat definiálunk, amelyeket a külvilág (Angular) alkalmazás elér HTTP kérésekkel és ezekre választ kap.
+Gyakran készítünk egy Service réteget is a Controller mellé, hogy mg jobban szétválasszuk a felelősségi köröket: A controller csak a kérések fogadásával és a válasz adással foglalkozik, a Service réteg a kérés és válasz közötti adat feldolgozással, adatbázissal való kommunikációval.
+ 
+Készítsünk el egy UserController-t:
+
+* az issuetracker package-en belül hozzunk létre egy controller package-et 
+* és abban egy UserController osztályt
+
+
+
