@@ -124,7 +124,7 @@ Ha most elindítjuk az alkalmazást `mvn spring-boot:run` és megnyitjuk a `loca
 Mivel a H2 adatbázis a memóriába ment, ezért minden alkalommal, mikor leállítjuk törlődnek az adataink. Ahhoz hogy legyenek adataink az induláskor az adatbázisban a Spring Boot segítségét vesszük.
 a src/main/resources mappában elkészítjük a data.sql-t(adatok insertálása).Ezt futtatja majd a Spring Boot, amikor az alakalmazásunkat indítjuk.
 
-Készítsünk egy új felhasználót a /src/main/schema.sql fájlban: `INSERT INTO USERS VALUES (0, 0, 'admin', 'admin@gmail.com', 'admin', 'ADMIN')`. Ez létrehoz egy felhasználót ID:0, Version: 0, username:'admin', email:'admin@gmail.com' password: 'admin', role: 'ADMIN'.
+Készítsünk egy új felhasználót a /src/main/schema.sql fájlban: `INSERT INTO USERS (ID, VERSION, USERNAME, EMAIL, PASSWORD, ROLE) VALUES (0, 0, 'admin', 'admin@gmail.com', 'admin', 'ADMIN');`. Ez létrehoz egy felhasználót ID:0, Version: 0, username:'admin', email:'admin@gmail.com' password: 'admin', role: 'ADMIN'.
 Később titkosítjuk majd a jelszót.
 
 A `select SQL from information_schema.tables where table_name = 'USERS';` parancs kiadásával a H2 konzolban az eredmány az az sql parancs, amit a JPA kiadott a tábla létrehozásához.
@@ -136,10 +136,156 @@ Még visszatérünk majd a modelre és kiegészítjük a többi osztállyal.
 A Controller feladata a beérkező HTTP kéréseket feldolgozni, és ezekre válaszolni. Végpontokat definiálunk, amelyeket a külvilág (Angular) alkalmazás elér HTTP kérésekkel és ezekre választ kap.
 Gyakran készítünk egy Service réteget is a Controller mellé, hogy mg jobban szétválasszuk a felelősségi köröket: A controller csak a kérések fogadásával és a válasz adással foglalkozik, a Service réteg a kérés és válasz közötti adat feldolgozással, adatbázissal való kommunikációval.
  
-Készítsünk el egy UserController-t:
+Készítsünk el egy UserController-t, amellyel bejelentkeztetünk, regisztrálhatunk:
 
 * az issuetracker package-en belül hozzunk létre egy controller package-et 
 * és abban egy UserController osztályt
 
+```java
+package hu.elte.alkfejl.issuetracker.controller;
+
+import hu.elte.alkfejl.issuetracker.model.User;
+import hu.elte.alkfejl.issuetracker.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+
+import static hu.elte.alkfejl.issuetracker.model.User.Role.USER;
+
+@Controller
+@RequestMapping("/user")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/greet")
+    public String greeting(@RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
+        model.addAttribute("name", name);
+        return "greeting";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute(new User());
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute User user, Model model) {
+        if (userService.isValid(user)) {
+            return redirectToGreeting(user);
+        }
+        model.addAttribute("loginFailed", true);
+        return "login";
+    }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(@ModelAttribute User user) {
+        user.setRole(USER);
+        userService.register(user);
+
+        return redirectToGreeting(user);
+    }
+
+    private String redirectToGreeting(@ModelAttribute User user) {
+        return "redirect:/user/greet?name=" + user.getUsername();
+    }
+}
+```
+
+Itt már rengeteg dolog történik: 
+* A @Controller annotációval jelezzük, hogy ez egy kontroller lesz, ez többek között egy Spring Bean-t készít az osztályból.
+* A Spring Bean olyan osztály, amiket a Spring Dependenxy Injectionben használ, nem kell kézzel new-val létrehoznunk, a Spring akkor létrehozza amikor szüksége van rá
+* A @RequestMapping("/user") annotáció megmondja a Springnek, hogy a /user alatt hallgasson minden végpont, minden HTTP metódusra
+* Bár a UserService osztály még nem íruk meg - ez lesz a következő feladat - itt már támaszkodunk rá. Ez egy service lesz, amely mint már említettem a kontrolelrekben található üzleti logikát tartalmazza. Spring Beanként hozzuk majd létre, ezért tudjuk az @Autowired annotációval beinjektálni
+* A @GetMapping("/greeting") azt állítja be, hogy a metódus a GET HTTP metódus hatására hívódjon meg méghozzá a /greet url-en, DE mivel az egész osztályra rátettük a @RequestMapping("/user")-t ezért a /user alá kerül be és lesz belőle /user/greet.
+* A @RequestParam segítségével érjük el a GET requestek paraméterét és alapértelmezett értéket is tudunk adni nekik. A `Model model` paraméter segítségével tudunk adatokat juttatni a felületre. Itt például a paraméterként érkező nevet juttatjuk a nézetbe. A metódus visszatérési értéke a template, amelyet megjeleníteni szeretnénk, erről a View részben lesz szó
+* A @PostMapping jelzi azt, hogy a metódus egy POST requestet fog kezelni a megadott route-on pl. /register vagy /login a @ModelAttribute a post metódusban érkező form adatokat parseolja fel és értelmezi User-ként, ehhez szükséges, hogy megefelelő legyen a mezők elnevezése a form-ban
+* Lehetőségünk van az átirányításra is ennek a mintáját látjuk a redirectToGreeting metódusban
+
+### Service
+A Service réteg szigorúbban véve a Controllerhez tartozik, az üzleti logikát tartamazza. A mi feladatunkban például a felhasználók validálásának menetét és a regisztárlást fogja tartalmazni.
+
+Azért is érdemes kivenni az ilyen logikát a controllerből és áthelyezni a Service-be mert lehet, hogy több helyről is akarjuk ugyanazokat a folyamatokat használni. Például ha egy REST API-t írunk az alkalmazáshoz, de  megtartjuk az  eredeti MVC appot is, akkor nem kell kétszer leírnunk ugyanazokat a logikákat (felhasználó bejelentkezésének folyamata, stb.) így a kódduplikációt szürhetjük ki, azaz ha megváltozik a logika a bejelentkeztetés mögött (pl. felhasználónév helyett email alapú lesz), akkor csak egy helyen kell módosítani: a service-ben.
 
 
+Készítsük el a UserService-t a service package-ben:
+
+```java
+package hu.elte.alkfejl.issuetracker.service;
+
+import hu.elte.alkfejl.issuetracker.model.User;
+import hu.elte.alkfejl.issuetracker.repository.UserRepoitory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepoitory userRepoitory;
+
+    public void register(User user) {
+        userRepoitory.save(user);
+    }
+
+    public boolean isValid(User user) {
+        return userRepoitory.findByUsernameAndPassword(user.getUsername(), user.getPassword()).isPresent();
+    }
+}
+
+```
+* A @Service annotációval jelezzük, hogy az osztályunk egy Spring Bean, így tudjuk majd injectelni az @Autowired segítségével más osztályokba, a Spring kezeli az életciklusát
+* Használunk egy UserRepository nevű SpringBean-t ezt még meg kell írnunk. Ő foglalkozi az adatok perzisztálásával, és lekérdezésével, lényegében az adatbázissal kommunikál
+
+### Data Access Layer 
+
+Lényegében a Model-be tartozik, de csak most jutottunk el a használatához, ezért mutatom itt be.
+
+A DAL egy absztrakt fogalom, azokat az osztályokat értjük bele, amelyek kapcsolatot teremtenek az adatbázissal.
+Az Entitásokkal ismerkedtünk meg eddik, ők leírják a Spring-nek, hogy milyen formában kell létrehozni a táblákat és a belőlük létrehozott objektumokkal dolgozunk az alkalmazásban/kommunikálunk az adatbázissal (bejelentkezünk és elküldjük a felhasználó adatait, regisztrációval új felhasználó vehető fel).
+Ahhoz, hogy elérjük az adatbázist szükségünk van még olyan osztályokra amelyek a kommunikációt írják le, eléggé absztrakt, ahhoz, hogy szinte bármilyen relációs adatbázissal működjön: 
+
+* Kapcsolat nyitása
+* Lekérdezések futtatása
+* Adatok visszaadása
+* Kapcsolat lezárása
+
+A DAL rétegünket felépítő osztályokat Springben Repositorynak hívjuk (Java EE-ben DAO, bár az kicsit más). 
+Általában nekünk kell ezeket az adatbázis lekérdezéseket megírnunk, JDBC ben vagy valamilyen absztrakt ORM-ben pl. Hibernate, Querydsl
+
+Ilyenkor általában nagyon hasonló kódok születnek, kb. midnig hasonlóan kell kapcsolatot teremteni egy adatbázissal, perzisztálni entitásokat stb.
+Itt most nem ez a helyzet. A [spring-data-jpa](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/) egy olyan eszközkészletet ad a kezünkbe, mely segítségével ezeket rábízhatjuk a Spring-re. A Spring konkrétan le generálja ezeket a kódokat, de ehhez egy megkötött formában kéri megadni a Reopsitoryt. FIGYELEM! Magic következik:
+  
+Készítsük el tehát a UserRepository-t:
+
+```java
+package hu.elte.alkfejl.issuetracker.repository;
+
+import hu.elte.alkfejl.issuetracker.model.User;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UserRepoitory extends CrudRepository<User, String> {
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByUsername(String username);
+
+    Optional<User> findByUsernameAndPassword(String username, String password);
+}
+``` 
+
+* A @Repository annotáció egy injektálható Spring Bean-t hoz létre, amely egy Repository lesz (DAL-ba tartozó osztály).
+* Származtassunk egy **interface**-t a CrudRepository interface-ből
+* Az első generikus paraméter azt írja el, milyen entitáshoz akarjuk majd használni a repositoryt, a második az ID
