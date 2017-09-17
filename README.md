@@ -1,6 +1,12 @@
 # Issue Tracker
 
-Egy alkalmazás az ELTE tantermeiben található hibák követésére, jelentésére. Egy REST API amely Spring Boot segítségével készül el MVC pattern alapján, valamint egy Angular frontend, amely a felhasználói felületet biztosítja, törekszünk az MVVM pattern megtartására. Az adatokat H2 adatbázisban tárljuk a memóriában
+Egy REST API amely Spring Boot segítségével készül el MVC pattern alapján, valamint egy Angular frontend, amely a felhasználói felületet biztosítja, törekszünk az MVVM pattern megtartására. Az adatokat H2 adatbázisban tárljuk a memóriában
+
+### Feladat
+
+Készítsünk egy webes alkalmazást, amellyel bejelentezett felhasználóként olyan hibákat jelenthetünk be, amelyek az ELTE egyes termeiben találhatóak (pl. elromlott projektor), a bejelentett hibáinkat megtekinthetjük, ezekhez megjegyszést írhatunk.
+Adminként mindenki hibáját megtekinthetjük, változtathatjuk a hibák státuszát, és válaszolhatunk a felhasználók üzeneteire.
+Látogatóként csak statisztikát látunk, és regisztrálhatunk.  
 
 ## Előkészületek
 
@@ -288,4 +294,59 @@ public interface UserRepoitory extends CrudRepository<User, String> {
 
 * A @Repository annotáció egy injektálható Spring Bean-t hoz létre, amely egy Repository lesz (DAL-ba tartozó osztály).
 * Származtassunk egy **interface**-t a CrudRepository interface-ből
-* Az első generikus paraméter azt írja el, milyen entitáshoz akarjuk majd használni a repositoryt, a második az ID
+* Az első generikus paraméter azt írja el, milyen entitáshoz akarjuk majd használni a repositoryt, a második az ID típusát.
+
+A CrudRepository egy olyan speciális repository amely definiálja a [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) műveletekhez szükséges metódusokat. Ezt kapjuk meg mi is, ha innen származtatjuk az interface-ünket
+
+### View
+
+A View rétegbe kerülnek azok a fájlok, amelyek a megjelenést biztosítják, tehát esetünkbe a html fájlok, amelyekbet a böngésző értelmezni fog.
+
+A Controllernél említettem, hogy az egyes metódusok át tudnak irányítani, vagy visszaadnak egy stringet, amellyel megmondják, melyik html fájlt kell renderelni.
+Ezeket a fájlokat az src/main/resources/remplates mappában helyezzük el, ilyenkor egyszerűen csak a nevüket kell visszaadni a controllerből pl. a greeting.html esetén greeting.
+Ha mélyebben lévő fájlt szeretnénk visszaadni azt is megtehetjük pl. templates/a/b.html esetén a/b -t kell visszaadnia a kontrollernek.
+
+Az eredeti HTML fájlok statikusak, ahogy megírjuk őket azok, úgy renderelődnek. Nekünk ez ebben az esetben nem jó, kellene valamilyen módszer, hogy adatokat tudjunk átadni nekik (dinamikus megjelenés kedvéért). 
+
+Ehhez használjuk a [Thymeleaf](http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html)-et.
+
+Lássunk egy példát a login oldalra:
+
+```html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Login</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <h1>Login</h1>
+        <h2 th:if="${loginFailed}">Invalid user data!</h2>
+        <form action="#" th:action="@{/user/login}" th:object="${user}" method="post">
+            <div id="username">
+                <label for="username">Username:</label>
+                <input type="text" name="username" placeholder="username" th:field="*{username}" />
+            </div>
+            <div id="password">
+                <label for="password">Password:</label>
+                <input type="password" name="password" placeholder="password" th:field="*{password}" />
+            </div>
+            <input type="submit" value="Submit!" />
+            <button type="reset">Cancel</button>
+        </form>
+    </body>
+</html>
+``` 
+
+Mint láthatjuk nem egy egyszerű html-lel van dolgunk, találunk itt xmlns namespace-t (th) és ilyen fura dolgokat, mint @{}, ${}, *{}.
+
+* @{} - link megjelenítésére használjuk
+* ${} - egy kifejezés kiértékelésére használjuk pl. változó kiírása
+* *{} - szintén kifejezés kiértékelésére használjuk, de mélyebb szinten pl. mivel a *{username}-t bentebbi szinten haszáljuk mint a ${user}-t ezért őt a ${user} fieldjeként kezeli. Itt a *{username} megegyezik a ${user.username} kifejezéssel
+* th:object - használatával a conrollerben látott @ModelAttribute-ba kötjük bele a form adatait
+* th:field - ezt a fieldet "belekötjük" a ModelAttribute-ba
+
+
+folyt köv.
+
+ 
