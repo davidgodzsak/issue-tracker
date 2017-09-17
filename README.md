@@ -71,6 +71,10 @@ public class BaseEntity {
 }
 ```
 
+A @MappedSuperclass annotáció mondja meg a JPA-nak, hogy ezt az osztályt nem fogjuk önmagában entitásként kezelni, csak felhasználjuk más entitásoknál. A @Data annotáció a Lombok-ból jön, segítségévle automatikusan kigenerálódnak a getterek, setterek equals, és hashcode metódusok.
+Az @Id mondja meg, hogy a mező fogja azonosítani az egyes entitásokat, és automatikusan generáljuk az értékeit egy inkrementális stratégiával.
+A @Version használatára azért van szükség, mert egyszerre több felhasználó is módosíthatja az adatokat, ilyenkor ez a változó segíti a fennakadás mentes munkát( minden a háttérben történik, ezzel nem kell foglalkoznunk) 
+
 * Elkészítjük a User táblát is
 
 ```java
@@ -111,6 +115,9 @@ public class User extends BaseEntity {
     }
 }
 ```
+Az @Entity annotációval mondjuk meg, hogy ez az osztály egy entitás lesz. Az előbb elkészített BaseEntityből szárámazik. Lombok segítségével legeneráljuk a konstruktorait (@AllArgsConstructor, @NoargsConstructor), valamint jelezzük, hogy az equals és a hashcode generálásakor vegye figyelembe az ősosztálybeli mezők értékeit is.
+A @Column annotáció használata nem kötelező, a JPA minden entitás beli oszlopot elment (kivéve ha használjuk a @Transient annotációt), viszont segítségével tudjuk az unique és a null constrainteket érvényesíteni a mezőn.
+Az @Enumerated annotációval jelezzük, hogy az ENUM típúsú mezőket milyen módon szeretnénk persistálni. Itt Stringként, érték szerint fogjuk ezt tenni.
 
 Ha most elindítjuk az alkalmazást `mvn spring-boot:run` és megnyitjuk a `localhost:8080/h2` -t akkor látjuk a H2 conosle ban, hogy sikeresen létrehozta az entitás leírása alapján a Spring Boot a JPA segítségével a táblánkat.
 
