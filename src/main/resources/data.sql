@@ -1,0 +1,1 @@
+INSERT INTO USERS VALUES (0, 0, 'admin', 'admin@gmail.com','admin', 'ADMIN')
