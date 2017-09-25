@@ -8,6 +8,10 @@ Készítsünk egy webes alkalmazást, amellyel bejelentezett felhasználóként 
 Adminként mindenki hibáját megtekinthetjük, változtathatjuk a hibák státuszát, és válaszolhatunk a felhasználók üzeneteire.
 Látogatóként csak statisztikát látunk, és regisztrálhatunk.  
 
+### További részek
+    
+[2. óra - REST API, Authentikáció, JOIN](./README2.md)
+
 ## Előkészületek
 
 Előkészítjük a Spring Boot projetünket a [Spring Initializer](https://start.spring.io/) eszközzel:
@@ -346,7 +350,5 @@ Mint láthatjuk nem egy egyszerű html-lel van dolgunk, találunk itt xmlns name
 * th:object - használatával a conrollerben látott @ModelAttribute-ba kötjük bele a form adatait
 * th:field - ezt a fieldet "belekötjük" a ModelAttribute-ba
 
-
-folyt köv.
 
  

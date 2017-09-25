@@ -10,8 +10,7 @@ import java.util.Optional;
  * @author Godzsák Dávid <godzsakdavid@gmail.com>
  */
 @Repository
-public interface UserRepoitory extends CrudRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
+public interface UserRepository extends CrudRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
