@@ -1,0 +1,21 @@
+<div class="page-body">
+  <h1>Issues</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Location</th>
+        <th>Added at</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let issue in issues">
+        <td>{{issue.description}}</td>
+        <td>{{issue.location}}</td>
+        <td>{{issue.timeStamp}}</td>
+        <td>{{issue.status}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -25,7 +25,7 @@ public class UserApiController {
         this.userService = userService;
     }
 
-    @Role({USER,ADMIN})
+    @Role({USER, ADMIN})
     @GetMapping
     public ResponseEntity<User> user() {
         if (userService.isLoggedIn()) {
