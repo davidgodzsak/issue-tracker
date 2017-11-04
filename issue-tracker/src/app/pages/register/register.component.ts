@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../../model/User";
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from "../../services/login.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-register',
@@ -33,6 +33,10 @@ export class RegisterComponent implements OnInit {
 
   get password(): AbstractControl {
     return this.registerForm.get('password');
+  }
+
+  get confirmPassword(): AbstractControl {
+    return this.registerForm.get('confirmPassword');
   }
 
   get email(): AbstractControl {

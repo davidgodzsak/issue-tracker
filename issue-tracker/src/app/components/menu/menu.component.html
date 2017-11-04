@@ -1,0 +1,14 @@
+<mat-toolbar id="top-menu" color="primary">
+  <div class="left-side">
+    <h1 class="mat-h1">Issue Tracker</h1>
+  </div>
+
+  <div class="center">
+    <a mat-button *ngFor="let menu of menus" [routerLink]="menu.link" routerLinkActive="active">{{menu.title}}</a>
+  </div>
+
+  <div class="right-side">
+    <a mat-button routerLink="/login" routerLinkActive="active">Login</a>/<a mat-button routerLink="/register"
+                                                                             routerLinkActive="active">Register</a>
+  </div>
+</mat-toolbar>

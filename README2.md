@@ -48,7 +48,7 @@ A JWT (Json Web Token) pont egy ilyen megoldás, bár még nem szabványos. Nagy
 ```java
 package hu.elte.alkfejl.issuetracker.service.annotations;
 
-import hu.elte.alkfejl.issuetracker.model.User;
+import hu.elte.alkfejl.issuetracker.app.model.User;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -110,7 +110,7 @@ Egy feladat maradt hátra, az interceptor elkészítése:
 ```java
 package hu.elte.alkfejl.issuetracker.config;
 
-import hu.elte.alkfejl.issuetracker.model.User;
+import hu.elte.alkfejl.issuetracker.app.model.User;
 import hu.elte.alkfejl.issuetracker.service.UserService;
 import hu.elte.alkfejl.issuetracker.service.annotations.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,7 +183,7 @@ Készítsük el az Issuek controllerét, ehhez az IssueService- osztályt is:
 ```java
 package hu.elte.alkfejl.issuetracker.api;
 
-import hu.elte.alkfejl.issuetracker.model.Issue;
+import hu.elte.alkfejl.issuetracker.app.model.Issue;
 import hu.elte.alkfejl.issuetracker.service.IssueService;
 import hu.elte.alkfejl.issuetracker.service.UserService;
 import hu.elte.alkfejl.issuetracker.service.annotations.Role;
@@ -191,8 +191,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static hu.elte.alkfejl.issuetracker.model.User.Role.ADMIN;
-import static hu.elte.alkfejl.issuetracker.model.User.Role.USER;
+import static hu.elte.alkfejl.issuetracker.app.model.User.Role.ADMIN;
+import static hu.elte.alkfejl.issuetracker.app.model.User.Role.USER;
 
 /**
  * @author Godzsák Dávid <godzsakdavid@gmail.com>

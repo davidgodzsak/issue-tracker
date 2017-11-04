@@ -18,10 +18,10 @@ Látogatóként csak statisztikát látunk, és regisztrálhatunk.
 
 - Telepítsük fel a [Node.js](https://nodejs.org/en/)-t (ezzel együtt az npm-et).
 - Az npm segítségével konzolból telepítsük az [Angular CLI](https://github.com/angular/angular-cli)-t globálisan: `npm install -g @angular/cli`
-- Hozzunk létre egy új projektet (akár a szerverünk mellett is egy új könyvtárban): `ng new issue-tracker`
-- Telepítsük fel a Material Design komponensekhez szükséges dependenciákat: `npm install --save @angular/material @angular/cdk @angular/animations`
+- Hozzunk létre egy új projektet (akár a szerverünk mellett is egy új könyvtárban): `ng new issue-tracker` és lépjünk is be: `cd issue-tracker`
+- Telepítsük fel a Material Design komponensekhez szükséges dependenciákat. Kövessük ezt a tutorialt: https://material.angular.io/guide/getting-started
 
-Az Angular CLI létrehozza az elinduláshoz szükséges fájlokat. Amikkel mi foglalkozunk mind az issue-tracker/issue-tracker/src könyvtárban találhatóak.
+Az Angular CLI létrehozza az elinduláshoz szükséges fájlokat. Amikkel mi foglalkozunk mind az `issue-tracker/issue-tracker/src` könyvtárban találhatóak.
 
 
 

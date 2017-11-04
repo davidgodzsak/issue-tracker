@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../../model/User";
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from "../../services/login.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -9,22 +9,18 @@ import {AuthService} from "../../services/login.service";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  user: User;
   loginForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required])
   });
 
   constructor(private loginService: AuthService) {
-
   }
 
   ngOnInit() {
-    this.user = new User();
   }
 
   submit() {
-    console.log('submit');
     this.loginService.login(new User(this.username.value, this.password.value))
       .then(res => console.log(res))
       .catch(err => console.log(err))
@@ -36,5 +32,9 @@ export class LoginComponent implements OnInit {
 
   get password(): AbstractControl {
     return this.loginForm.get('password');
+  }
+
+  registerPage() {
+
   }
 }

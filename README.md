@@ -52,17 +52,17 @@ A struktúra megtartásával az egyes rétegek könnyebben cserélhetőek, kieg�
 
 Mi az az MVC: 
 * https://www.youtube.com/watch?v=1IsL6g2ixak
-* https://medium.freecodecamp.org/model-view-controller-mvc-explained-through-ordering-drinks-at-the-bar-efcba6255053
+* https://medium.freecodecamp.org/app.model-view-controller-mvc-explained-through-ordering-drinks-at-the-bar-efcba6255053
 
 ### Model
 
 Az MVC ben az M a Model-t jelenti. Ebben a rétegben írjuk le az adatbázisban található entitásokat és ezek kapcsolatait
 
-* Készítsünk egy model package-et az issuetracker package-en belül
+* Készítsünk egy app.model package-et az issuetracker package-en belül
 * Minden entitásnak szüksége lesz ID és Version mezőkre, ezért készítünk egy BaseEntity-t
 
 ```java
-package hu.elte.alkfejl.issuetracker.model;
+package hu.elte.alkfejl.issuetracker.app.model;
 
 import lombok.Data;
 
@@ -88,7 +88,7 @@ A @Version használatára azért van szükség, mert egyszerre több felhasznál
 * Elkészítjük a User táblát is
 
 ```java
-package hu.elte.alkfejl.issuetracker.model;
+package hu.elte.alkfejl.issuetracker.app.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -154,7 +154,7 @@ Készítsünk el egy UserController-t, amellyel bejelentkeztetünk, regisztrálh
 ```java
 package hu.elte.alkfejl.issuetracker.controller;
 
-import hu.elte.alkfejl.issuetracker.model.User;
+import hu.elte.alkfejl.issuetracker.app.model.User;
 import hu.elte.alkfejl.issuetracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -162,7 +162,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import static hu.elte.alkfejl.issuetracker.model.User.Role.USER;
+import static hu.elte.alkfejl.issuetracker.app.model.User.Role.USER;
 
 @Controller
 @RequestMapping("/user")
@@ -172,29 +172,29 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/greet")
-    public String greeting(@RequestParam(value = "name", required = false, defaultValue = "World") String name, Model model) {
-        model.addAttribute("name", name);
+    public String greeting(@RequestParam(value = "name", required = false, defaultValue = "World") String name, Model app.model) {
+        app.model.addAttribute("name", name);
         return "greeting";
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute(new User());
+    public String login(Model app.model) {
+        app.model.addAttribute(new User());
         return "login";
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute User user, Model model) {
+    public String login(@ModelAttribute User user, Model app.model) {
         if (userService.isValid(user)) {
             return redirectToGreeting(user);
         }
-        model.addAttribute("loginFailed", true);
+        app.model.addAttribute("loginFailed", true);
         return "login";
     }
 
     @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("user", new User());
+    public String register(Model app.model) {
+        app.model.addAttribute("user", new User());
         return "register";
     }
 
@@ -218,7 +218,7 @@ Itt már rengeteg dolog történik:
 * A @RequestMapping("/user") annotáció megmondja a Springnek, hogy a /user alatt hallgasson minden végpont, minden HTTP metódusra
 * Bár a UserService osztály még nem íruk meg - ez lesz a következő feladat - itt már támaszkodunk rá. Ez egy service lesz, amely mint már említettem a kontrolelrekben található üzleti logikát tartalmazza. Spring Beanként hozzuk majd létre, ezért tudjuk az @Autowired annotációval beinjektálni
 * A @GetMapping("/greeting") azt állítja be, hogy a metódus a GET HTTP metódus hatására hívódjon meg méghozzá a /greet url-en, DE mivel az egész osztályra rátettük a @RequestMapping("/user")-t ezért a /user alá kerül be és lesz belőle /user/greet.
-* A @RequestParam segítségével érjük el a GET requestek paraméterét és alapértelmezett értéket is tudunk adni nekik. A `Model model` paraméter segítségével tudunk adatokat juttatni a felületre. Itt például a paraméterként érkező nevet juttatjuk a nézetbe. A metódus visszatérési értéke a template, amelyet megjeleníteni szeretnénk, erről a View részben lesz szó
+* A @RequestParam segítségével érjük el a GET requestek paraméterét és alapértelmezett értéket is tudunk adni nekik. A `Model app.model` paraméter segítségével tudunk adatokat juttatni a felületre. Itt például a paraméterként érkező nevet juttatjuk a nézetbe. A metódus visszatérési értéke a template, amelyet megjeleníteni szeretnénk, erről a View részben lesz szó
 * A @PostMapping jelzi azt, hogy a metódus egy POST requestet fog kezelni a megadott route-on pl. /register vagy /login a @ModelAttribute a post metódusban érkező form adatokat parseolja fel és értelmezi User-ként, ehhez szükséges, hogy megefelelő legyen a mezők elnevezése a form-ban
 * Lehetőségünk van az átirányításra is ennek a mintáját látjuk a redirectToGreeting metódusban
 
@@ -233,7 +233,7 @@ Készítsük el a UserService-t a service package-ben:
 ```java
 package hu.elte.alkfejl.issuetracker.service;
 
-import hu.elte.alkfejl.issuetracker.model.User;
+import hu.elte.alkfejl.issuetracker.app.model.User;
 import hu.elte.alkfejl.issuetracker.repository.UserRepoitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -280,7 +280,7 @@ Készítsük el tehát a UserRepository-t:
 ```java
 package hu.elte.alkfejl.issuetracker.repository;
 
-import hu.elte.alkfejl.issuetracker.model.User;
+import hu.elte.alkfejl.issuetracker.app.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

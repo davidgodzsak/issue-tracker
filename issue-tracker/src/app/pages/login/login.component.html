@@ -1,0 +1,24 @@
+<div class="page-body" id="login-page">
+  <h2 class="mat-h2">Login</h2>
+  <form [formGroup]="loginForm" novalidate>
+    <div class="form-control">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Username" formControlName="username">
+        <mat-error *ngIf="username.hasError('required')">
+          Username is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-control">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Password" formControlName="password" type="password">
+        <mat-error *ngIf="password.hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button class="mat-primary" (click)="submit()" [disabled]="!loginForm.valid">Login</button>
+    <a mat-button class="mat-accent" routerLink="/register">Register</a>
+  </form>
+</div>
