@@ -14,6 +14,9 @@ import { IssueDetailComponent } from './pages/issues/issue-detail/issue-detail.c
 import { IssueListComponent } from './pages/issues/issue-list/issue-list.component';
 import {MaterialItemsModule} from "./MaterialItemsModule";
 import { MenuComponent } from './components/menu/menu.component';
+import { NewIssueComponent } from './pages/issues/new-issue/new-issue.component';
+import { StatsComponent } from './pages/stats/stats.component';
+import {IssueService} from "./services/issue.service";
 
 @NgModule({
   declarations: [
@@ -22,7 +25,9 @@ import { MenuComponent } from './components/menu/menu.component';
     RegisterComponent,
     IssueDetailComponent,
     IssueListComponent,
-    MenuComponent
+    MenuComponent,
+    NewIssueComponent,
+    StatsComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +38,7 @@ import { MenuComponent } from './components/menu/menu.component';
     BrowserAnimationsModule,
     MaterialItemsModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, IssueService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

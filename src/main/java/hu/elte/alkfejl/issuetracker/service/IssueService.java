@@ -24,6 +24,10 @@ public class IssueService {
     }
 
     public Iterable<Issue> listByRole(User user) {
+        //TODO: kivenni
+        if (user == null) {
+            return issueRepository.findAll();
+        }
         User.Role role = user.getRole();
         if (role.equals(User.Role.USER)) {
             return issueRepository.findAllByUser(user);

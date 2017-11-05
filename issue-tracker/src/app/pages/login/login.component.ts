@@ -33,8 +33,4 @@ export class LoginComponent implements OnInit {
   get password(): AbstractControl {
     return this.loginForm.get('password');
   }
-
-  registerPage() {
-
-  }
 }

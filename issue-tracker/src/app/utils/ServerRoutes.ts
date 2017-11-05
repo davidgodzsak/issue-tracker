@@ -1,6 +1,7 @@
 export class Routes {
   static LOGIN: String = 'user/login';
   static REGISTER: String = 'user/register';
+  static ISSUES: String = 'issues';
 }
 
 export class Server {
