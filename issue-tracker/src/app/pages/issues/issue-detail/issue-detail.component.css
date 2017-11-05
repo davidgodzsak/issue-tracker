@@ -1,0 +1,23 @@
+.page-body {
+  padding: 25px;
+  background-color: white;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+#comments {
+  text-align: right;
+  list-style: none;
+}
+
+#comments li {
+  margin: 5px;
+}
+
+#comments li mat-card {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #3f51b5;
+  color: white;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}

@@ -22,11 +22,11 @@ export class NewIssueComponent implements OnInit {
   }
 
   get location() {
-    return this.issueForm.get('description')
+    return this.issueForm.get('location')
   }
 
   get description() {
-    return this.issueForm.get('location')
+    return this.issueForm.get('description')
   }
 
   submit() {

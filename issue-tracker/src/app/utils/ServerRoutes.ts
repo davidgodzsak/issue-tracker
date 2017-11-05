@@ -6,7 +6,7 @@ export class Routes {
 
 export class Server {
   private static address: String = 'localhost';
-  private static port: String = '8080';
+  private static port: String = '4200';
   private static prefix: String = 'api';
 
   static routeTo(route: String) {

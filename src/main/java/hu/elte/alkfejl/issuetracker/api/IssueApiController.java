@@ -24,35 +24,35 @@ public class IssueApiController {
     @Autowired
     private UserService userService;
 
-//    @Role({ADMIN, USER})
+    @Role({ADMIN, USER})
     @GetMapping
     private ResponseEntity<Iterable<Issue>> list() {
         Iterable<Issue> issues = issueService.listByRole(userService.getUser());
         return ResponseEntity.ok(issues);
     }
 
-//    @Role({ADMIN, USER})
+    @Role({ADMIN, USER})
     @PostMapping
     private ResponseEntity<Issue> create(@RequestBody Issue issue) {
         Issue saved = issueService.create(issue);
         return ResponseEntity.ok(saved);
     }
 
-//    @Role({ADMIN, USER})
+    @Role({ADMIN, USER})
     @GetMapping("/{id}")
     private ResponseEntity<Issue> read(@PathVariable String id) {
         Issue read = issueService.read(Integer.parseInt(id));
         return ResponseEntity.ok(read);
     }
 
-//    @Role(ADMIN)
+    @Role(ADMIN)
     @PutMapping("/{id}")
     private ResponseEntity<Issue> update(@PathVariable int id, @RequestBody Issue issue) {
         Issue updated = issueService.update(id, issue);
         return ResponseEntity.ok(updated);
     }
 
-//    @Role(ADMIN)
+    @Role(ADMIN)
     @DeleteMapping("/{id}")
     private ResponseEntity delete(@PathVariable int id) {
         issueService.delete(id);

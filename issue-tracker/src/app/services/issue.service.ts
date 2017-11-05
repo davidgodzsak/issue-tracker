@@ -25,4 +25,9 @@ export class IssueService {
     return this.http.delete(Server.routeTo(Routes.ISSUES) + '/' + id)
       .map(res => res.json())
   }
+
+  read(id: number) {
+    return this.http.get(Server.routeTo(Routes.ISSUES) + '/' + id)
+      .map(res => res.json())
+  }
 }

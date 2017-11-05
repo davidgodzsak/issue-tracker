@@ -1,3 +1,30 @@
-<p>
-  issue-detail works!
-</p>
+<div class="page-body">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title><h1 class="mat-h1">{{issue.location}}</h1></mat-card-title>
+      <mat-card-subtitle><h2 class="mat-h2">{{issue.status}}</h2></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <h2 class="mat-h2">{{issue.description}}</h2>
+
+      <ul id="comments">
+        <li>
+          <mat-card class="comment">
+            comment
+          </mat-card>
+        </li>
+        <li>
+          <mat-card class="comment">
+            comment for the second time
+          </mat-card>
+        </li>
+      </ul>
+    </mat-card-content>
+    <mat-card-actions>
+      <mat-input-container>
+        <input matInput [(ngModel)]="comment" placeholder="Comment" />
+      </mat-input-container>
+      <button mat-raised-button class="mat-accent" (click)="submit()">Submit comment</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

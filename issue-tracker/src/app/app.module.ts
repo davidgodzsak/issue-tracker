@@ -17,6 +17,8 @@ import { MenuComponent } from './components/menu/menu.component';
 import { NewIssueComponent } from './pages/issues/new-issue/new-issue.component';
 import { StatsComponent } from './pages/stats/stats.component';
 import {IssueService} from "./services/issue.service";
+import { HelpComponent } from './pages/help/help.component';
+import { ErrorComponent } from './pages/error/error.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import {IssueService} from "./services/issue.service";
     IssueListComponent,
     MenuComponent,
     NewIssueComponent,
-    StatsComponent
+    StatsComponent,
+    HelpComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
