@@ -1,6 +1,7 @@
 package hu.elte.alkfejl.issuetracker.api;
 
 import hu.elte.alkfejl.issuetracker.model.Issue;
+import hu.elte.alkfejl.issuetracker.model.IssueMessage;
 import hu.elte.alkfejl.issuetracker.service.IssueService;
 import hu.elte.alkfejl.issuetracker.service.UserService;
 import hu.elte.alkfejl.issuetracker.service.annotations.Role;
@@ -56,6 +57,13 @@ public class IssueApiController {
     @DeleteMapping("/{id}")
     private ResponseEntity delete(@PathVariable int id) {
         issueService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @Role({USER, ADMIN})
+    @PostMapping("/{id}/message")
+    private ResponseEntity addMessage(@PathVariable int id, @RequestBody IssueMessage message) {
+        issueService.addMessage(id, message);
         return ResponseEntity.ok().build();
     }
 }

@@ -10,7 +10,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class IssueDetailComponent implements OnInit {
   issue: Issue = new Issue();
-  comment: String = '';
+  message: String = '';
   id: number;
 
   constructor(private issueService: IssueService,
@@ -26,6 +26,22 @@ export class IssueDetailComponent implements OnInit {
     this.issueService.read(this.id)
       .subscribe(
         issue => this.issue = issue,
+        err => console.log(err)
+      )
+  }
+
+  updateStatus() {
+    this.issueService.update(this.issue)
+      .subscribe(
+        issue => console.log('ok'),
+        err => console.log(err)
+      )
+  }
+
+  submit() {
+    this.issueService.sendMessage(this.issue.id, this.message)
+      .subscribe(
+        issue => console.log('ok'),
         err => console.log(err)
       )
   }

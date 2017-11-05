@@ -11,6 +11,7 @@ export class Issue {
   status: IssueStatus;
   description: String;
   location: String;
+  messages: String[];
 
   constructor(description?: String, location?: String, status?: IssueStatus, timeStamp?: Date, user?: User, id?: number) {
     this.user = user;

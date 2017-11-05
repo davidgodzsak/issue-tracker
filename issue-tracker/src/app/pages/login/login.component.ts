@@ -22,8 +22,9 @@ export class LoginComponent implements OnInit {
 
   submit() {
     this.loginService.login(new User(this.username.value, this.password.value))
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .subscribe(
+        res => console.log(res),
+        err => console.log(err))
   }
 
   get username(): AbstractControl {

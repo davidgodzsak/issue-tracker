@@ -1,6 +1,7 @@
 package hu.elte.alkfejl.issuetracker.service;
 
 import hu.elte.alkfejl.issuetracker.model.Issue;
+import hu.elte.alkfejl.issuetracker.model.IssueMessage;
 import hu.elte.alkfejl.issuetracker.model.User;
 import hu.elte.alkfejl.issuetracker.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,12 @@ public class IssueService {
 
     public Issue read(int id) {
         return issueRepository.findOne(id);
+    }
+
+    public void addMessage(int id, IssueMessage message) {
+        Issue issue = issueRepository.findOne(id);
+        message.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+        issue.getMessages().add(message);
+        issueRepository.save(issue);
     }
 }

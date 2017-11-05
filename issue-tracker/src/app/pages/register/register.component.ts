@@ -23,8 +23,9 @@ export class RegisterComponent implements OnInit {
 
   submit() {
     this.authService.register(new User(this.username.value, this.password.value, this.email.value))
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .subscribe(
+        res => console.log(res),
+        err => console.log(err))
   }
 
   get username(): AbstractControl {

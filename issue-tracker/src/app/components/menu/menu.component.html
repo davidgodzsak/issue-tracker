@@ -8,7 +8,14 @@
   </div>
 
   <div class="right-side">
-    <a mat-button routerLink="/login" routerLinkActive="active">Login</a>/<a mat-button routerLink="/register"
-                                                                             routerLinkActive="active">Register</a>
+    <div *ngIf="!authService.isLoggedIn" class="unauthorized">
+      <a mat-button routerLink="/login" routerLinkActive="active">Login</a>/
+      <a mat-button routerLink="/register"
+         routerLinkActive="active">Register</a>
+    </div>
+
+    <div *ngIf="authService.isLoggedIn" class="authorized">
+      <button mat-button (click)="authService.logout()">Logout</button>
+    </div>
   </div>
 </mat-toolbar>

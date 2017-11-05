@@ -30,4 +30,14 @@ export class IssueService {
     return this.http.get(Server.routeTo(Routes.ISSUES) + '/' + id)
       .map(res => res.json())
   }
+
+  update(issue: Issue) {
+    return this.http.put(Server.routeTo(Routes.ISSUES) + '/' + issue.id, issue)
+      .map(res => res.json())
+  }
+
+  sendMessage(id: number, message: String) {
+    return this.http.post(Server.routeTo(Routes.ISSUES + '/' + id + '/message'), {message})
+      .map(res => res.json())
+  }
 }

@@ -6,6 +6,7 @@ import {Routes, Server} from "../utils/ServerRoutes";
 @Injectable()
 export class AuthService {
   user: User;
+  isLoggedIn: boolean = false;
 
   constructor(private http: Http) {
     this.user = new User();
@@ -13,13 +14,27 @@ export class AuthService {
 
   login(user: User) {
     return this.http.post(Server.routeTo(Routes.LOGIN), user)
-      .toPromise()
-      .then(res => this.user = res.json())
-      .catch(err => console.log('handle Error', err))
+      .map(res => {
+        this.isLoggedIn = true;
+        this.user = res.json();
+        return this.user;
+      })
   }
 
   register(user: User) {
     return this.http.post(Server.routeTo(Routes.REGISTER), user)
-      .toPromise();
+      .map(res => {
+        this.isLoggedIn = true;
+        this.user = res.json();
+        return this.user;
+      })
+  }
+
+  logout() {
+    return this.http.get(Server.routeTo(Routes.LOGOUT))
+      .map(res => {
+        this.user = null;
+        this.isLoggedIn = false;
+      })
   }
 }
