@@ -19,6 +19,7 @@ import { StatsComponent } from './pages/stats/stats.component';
 import {IssueService} from "./services/issue.service";
 import { HelpComponent } from './pages/help/help.component';
 import { ErrorComponent } from './pages/error/error.component';
+import {RouteGuard} from "./route.guard";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import { ErrorComponent } from './pages/error/error.component';
     BrowserAnimationsModule,
     MaterialItemsModule
   ],
-  providers: [AuthService, IssueService],
+  providers: [AuthService, IssueService, RouteGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {
