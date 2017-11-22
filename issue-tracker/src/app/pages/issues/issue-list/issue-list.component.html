@@ -20,7 +20,7 @@
 
     <ng-container matColumnDef="timestamp">
       <mat-header-cell *matHeaderCellDef> Timestamp</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.timeStamp | date}}</mat-cell>
+      <mat-cell *matCellDef="let element"> {{toDate(element.timestamp) | date}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="edit">

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http} from "@angular/http";
 import {User} from "../model/User";
 import {Routes, Server} from "../utils/ServerRoutes";
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class AuthService {

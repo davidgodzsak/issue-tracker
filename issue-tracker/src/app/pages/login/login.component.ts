@@ -14,14 +14,14 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required])
   });
 
-  constructor(private loginService: AuthService) {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit() {
   }
 
   submit() {
-    this.loginService.login(new User(this.username.value, this.password.value))
+    this.authService.login(new User(this.username.value, this.password.value))
       .subscribe(
         res => console.log(res),
         err => console.log(err))

@@ -36,10 +36,6 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get('password');
   }
 
-  get confirmPassword(): AbstractControl {
-    return this.registerForm.get('confirmPassword');
-  }
-
   get email(): AbstractControl {
     return this.registerForm.get('email');
   }

@@ -24,12 +24,11 @@ export class IssueListComponent {
         err => console.log(err)
       );
   }
-}
 
-const data: Issue[] = [
-  new Issue('description', 'location', IssueStatus.ADDED, new Date(), undefined, 1),
-  new Issue('elromlott a tábla', '0.420', IssueStatus.ADDED, new Date(), undefined, 2)
-];
+  toDate(timestamp: number): Date {
+    return new Date(timestamp)
+  }
+}
 
 export class IssueDataSource extends DataSource<any> {
   constructor(private issueService: IssueService) {
