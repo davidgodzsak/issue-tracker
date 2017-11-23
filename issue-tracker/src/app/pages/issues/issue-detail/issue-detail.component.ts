@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Issue} from "../../../model/Issue";
+import {Issue, IssueStatus} from "../../../model/Issue";
 import {IssueService} from "../../../services/issue.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -12,6 +12,7 @@ export class IssueDetailComponent implements OnInit {
   issue: Issue = new Issue();
   message: String = '';
   id: number;
+  statuses: String[] = [IssueStatus.ADDED, IssueStatus.ONGOING, IssueStatus.READY];
 
   constructor(private issueService: IssueService,
               private route: ActivatedRoute,
@@ -23,6 +24,10 @@ export class IssueDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.reload();
+  }
+
+  private reload() {
     this.issueService.read(this.id)
       .subscribe(
         issue => this.issue = issue,
@@ -30,7 +35,8 @@ export class IssueDetailComponent implements OnInit {
       )
   }
 
-  updateStatus() {
+  updateStatus(event) {
+    this.issue.status = event.source.triggerValue;
     this.issueService.update(this.issue)
       .subscribe(
         issue => console.log('ok'),
@@ -41,7 +47,7 @@ export class IssueDetailComponent implements OnInit {
   submit() {
     this.issueService.sendMessage(this.issue.id, this.message)
       .subscribe(
-        issue => console.log('ok'),
+        issue => this.reload(),
         err => console.log(err)
       )
   }

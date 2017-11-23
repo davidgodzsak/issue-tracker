@@ -5,8 +5,8 @@
 
       <mat-card-subtitle>
         <mat-form-field>
-          <mat-select placeholder="Status" (change)="updateStatus()">
-            <mat-option *ngFor="let status of ['ADDED','ONGOING','READY']" [value]="issue.status">
+          <mat-select placeholder="Status" (change)="updateStatus($event)" [(ngModel)]="issue.status">
+            <mat-option *ngFor="let status of statuses" [value]="issue.status">
               {{ status }}
             </mat-option>
           </mat-select>

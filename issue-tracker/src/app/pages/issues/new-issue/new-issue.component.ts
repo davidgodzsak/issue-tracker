@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Issue} from "../../../model/Issue";
 import {IssueService} from "../../../services/issue.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-new-issue',
@@ -14,7 +15,7 @@ export class NewIssueComponent implements OnInit {
     location: new FormControl('', [Validators.required])
   });
 
-  constructor(private issueService: IssueService) {
+  constructor(private issueService: IssueService, private router: Router) {
 
   }
 
@@ -32,7 +33,7 @@ export class NewIssueComponent implements OnInit {
   submit() {
     this.issueService.create(new Issue(this.description.value, this.location.value))
       .subscribe(
-        res => res,
+        res => this.router.navigate(['/issues']),
         err => console.log(err)
       )
   }

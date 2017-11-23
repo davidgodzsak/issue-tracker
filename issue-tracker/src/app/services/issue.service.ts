@@ -38,6 +38,5 @@ export class IssueService {
 
   sendMessage(id: number, message: String) {
     return this.http.post(Server.routeTo(Routes.ISSUES + '/' + id + '/message'), {message})
-      .map(res => res.json())
   }
 }

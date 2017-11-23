@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {User} from "../../model/User";
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,7 @@ export class RegisterComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   ngOnInit() {
@@ -24,7 +25,7 @@ export class RegisterComponent implements OnInit {
   submit() {
     this.authService.register(new User(this.username.value, this.password.value, this.email.value))
       .subscribe(
-        res => console.log(res),
+        res => this.router.navigate(['/issues']),
         err => console.log(err))
   }
 

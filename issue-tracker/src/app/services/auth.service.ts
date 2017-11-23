@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Http} from "@angular/http";
 import {User} from "../model/User";
 import {Routes, Server} from "../utils/ServerRoutes";
-import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class AuthService {
@@ -34,7 +33,7 @@ export class AuthService {
   logout() {
     return this.http.get(Server.routeTo(Routes.LOGOUT))
       .map(res => {
-        this.user = null;
+        this.user = new User();
         this.isLoggedIn = false;
       })
   }
